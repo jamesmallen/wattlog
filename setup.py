@@ -4,17 +4,17 @@ from setuptools import setup
 
 setup(
     # GETTING-STARTED: set your app name:
-    name='YourAppName',
+    name='WattLog',
     # GETTING-STARTED: set your app version:
     version='1.0',
     # GETTING-STARTED: set your app description:
     description='OpenShift App',
     # GETTING-STARTED: set author name (your name):
-    author='Your Name',
+    author='James M. Allen',
     # GETTING-STARTED: set author email (your email):
-    author_email='example@example.com',
+    author_email='james.m.allen@gmail.com',
     # GETTING-STARTED: set author url (your url):
-    url='http://www.python.org/sigs/distutils-sig/',
+    url='http://jamesmallen.net',
     # GETTING-STARTED: define required django version:
-    install_requires=['Django<=1.8'],
+    install_requires=['Django<=1.8', 'djangorestframework<=3.1.1'],
 )
