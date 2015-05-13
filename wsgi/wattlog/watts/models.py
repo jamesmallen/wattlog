@@ -12,10 +12,6 @@ class Measurement(models.Model):
         return "%s: %d whrs" % (self.timestamp, self.watt_hours)
 
 
-class EstimatedMeasurement(object):
-    timestamp = models.DateTimeField(auto_now_add=True)
-    watt_hours = models.IntegerField(default=0, blank=True)
-
 
 def get_estimated_measurement(timestamp):
     """
