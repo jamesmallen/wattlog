@@ -23,6 +23,12 @@ def datetime_or_date(s):
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def total_watt_hours(request):
+    """
+    Returns the total watt hours reported to the application.
+
+    :param start_date: The starting date (e.g., 2015-05-13)
+    :param end_date: The ending date (e.g., 2015-05-15)
+    """
     start_date = request.GET.get('start_date', None)
     end_date = request.GET.get('end_date', None)
 
