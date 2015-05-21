@@ -18,7 +18,7 @@ class MeasurementViewSet(viewsets.ModelViewSet):
 
 
 def datetime_or_date(s):
-    return parse_datetime(s) or datetime.combine(parse_date(s), datetime.min.time())
+    return timezone.make_aware(parse_datetime(s) or datetime.combine(parse_date(s), datetime.min.time()))
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
