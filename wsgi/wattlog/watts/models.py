@@ -52,7 +52,7 @@ def get_total_watt_hours(start_time, end_time=None):
         timestamp__gt=start_time, timestamp__lt=end_time)
 
     last_m = start
-    for m in measurements + [end]:
+    for m in list(measurements) + [end]:
         if m.watt_hours >= last_m.watt_hours:
             total += m.watt_hours - last_m.watt_hours
         else:
