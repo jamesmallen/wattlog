@@ -12,16 +12,16 @@ class Measurement(models.Model):
         return "%s: %d whrs" % (self.timestamp, self.watt_hours)
 
 
-
 def get_estimated_measurement(timestamp):
     """
     Returns an estimated measurement object, using linear interpolation
     between the two nearest measurements recorded.
     """
 
-
-    before = Measurement.objects.filter(timestamp__lte=timestamp).order_by('-timestamp').first()
-    after = Measurement.objects.filter(timestamp__gte=timestamp).order_by('timestamp').first()
+    before = Measurement.objects.filter(
+        timestamp__lte=timestamp).order_by('-timestamp').first()
+    after = Measurement.objects.filter(
+        timestamp__gte=timestamp).order_by('timestamp').first()
 
     if before is None:
         before = after
@@ -32,7 +32,8 @@ def get_estimated_measurement(timestamp):
         # watt_hours reset or is the same - just return the later value
         return after
 
-    scale = (timestamp - before.timestamp).total_seconds() / (after.timestamp - before.timestamp).total_seconds()
+    scale = (timestamp - before.timestamp).total_seconds() / \
+        (after.timestamp - before.timestamp).total_seconds()
 
     watt_hours = (1 - scale) * before.watt_hours + scale * after.watt_hours
 
@@ -44,16 +45,20 @@ def get_total_watt_hours(start_time, end_time=None):
         end_time = timezone.now()
     start = get_estimated_measurement(start_time)
     end = get_estimated_measurement(end_time)
-    
+
     total = 0
 
-    measurements = Measurement.objects.filter(timestamp__gt=start_time, timestamp__lt=end_time)
+    measurements = Measurement.objects.filter(
+        timestamp__gt=start_time, timestamp__lt=end_time)
+
     last_m = start
-    for m in measurements:
+    for m in measurements + [end]:
         if m.watt_hours >= last_m.watt_hours:
             total += m.watt_hours - last_m.watt_hours
+        else:
+            # reset
+            total += m.watt_hours
         last_m = m
-    
-    return total
-    #return end.watt_hours - start.watt_hours
 
+    return total
+    # return end.watt_hours - start.watt_hours
