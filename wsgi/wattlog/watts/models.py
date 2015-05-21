@@ -18,6 +18,8 @@ def get_estimated_measurement(timestamp):
     Returns an estimated measurement object, using linear interpolation
     between the two nearest measurements recorded.
     """
+
+
     before = Measurement.objects.filter(timestamp__lte=timestamp).order_by('-timestamp').first()
     after = Measurement.objects.filter(timestamp__gte=timestamp).order_by('timestamp').first()
 
@@ -42,6 +44,16 @@ def get_total_watt_hours(start_time, end_time=None):
         end_time = timezone.now()
     start = get_estimated_measurement(start_time)
     end = get_estimated_measurement(end_time)
+    
+    total = 0
 
-    return end.watt_hours - start.watt_hours
+    measurements = Measurement.objects.filter(timestamp__gt=start_time, timestamp__lt=end_time)
+    last_m = start
+    for m in measurements:
+        if m.watt_hours >= last_m.watt_hours:
+            total += m.watt_hours - last_m.watt_hours
+        last_m = m
+    
+    return total
+    #return end.watt_hours - start.watt_hours
 
